@@ -14,9 +14,7 @@ use App\Http\Controllers\RegistrationFeesController;
 use App\Http\Controllers\SavingsController;
 use App\Http\Controllers\SubscriptionsController;
 use Illuminate\Support\Facades\Http;
-use Symfony\Component\HttpFoundation\Request;
 
-use function PHPSTORM_META\map;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +66,7 @@ Route::post('test', function () {
 
 Route::get('campay', [CampayController::class, 'collect']);
 Route::get('campay/{reference}', [CampayController::class, 'checkTransactionStatus']);
+Route::get('campay/callback', [CampayController::class, 'callback']);
 
 Route::middleware('auth:sanctum')->group(function () {
 	Route::post('logout', [AuthController::class, 'logout'])->name('logout');

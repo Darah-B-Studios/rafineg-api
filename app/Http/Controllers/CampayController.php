@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\CollectionRequest;
+use App\Http\Requests\CampayCallbackRequest;
 use Illuminate\Support\Facades\Http;
 
 class CampayController extends Controller
@@ -25,39 +26,28 @@ class CampayController extends Controller
 		];
 
 		$response = Http::acceptJson()->post($url, $params);
-
 		return $response['token'];
 	}
 
-
-	/* public function collect(Request $request, $country_code = '237') */
-	public function collect($country_code = '237')
+	public function collect(CollectionRequest $request, $country_code = '237')
 	{
 		$url = $this->base_url . 'collect/';
-		/* $this->token = $this->getAccessToken(); */
-		/* $data = [ */
-		/*	"amount" => $request->input('amount'), */
-		/*	"from" => $request->input('phoneNumber'), */
-		/*	"description" => $request->input('description'), */
-		/*	"external_reference" => $request->input('externalReference') */
-		/* ]; */
-
-		$data = [
-			"amount" => 10,
-			"from" => $country_code . '672374414',
-			"description" => 'test description',
-			"external_reference" => 'test reference'
+		$data = $request->validated();
+		$requestData = [
+			"amount" => $data['amount'],
+			"from" => $data['phoneNumber'],
+			"description" => $data['description'],
+			"external_reference" => $data['externalReference']
 		];
-
 		$headers = [
 			"Authorization" => "Token " . $this->token,
-			"Content-Type" => 'application/json'
 		];
 
-		$response = Http::withHeaders($headers)->post($url, $data);
+		$response = Http::acceptJson()->withHeaders($headers)->post($url, $data);
 		if (!$response->ok()) {
 			return response()->json([
 				'success' => false,
+				'message' => 'Transaction failed',
 				'response' => $response->body()
 			]);
 		}
@@ -68,7 +58,6 @@ class CampayController extends Controller
 	public function checkTransactionStatus(string $reference)
 	{
 		$url = $this->base_url . 'transaction/' . $reference;
-		/* $this->token = $this->getAccessToken(); */
 
 		$headers = [
 			"Authorization" => "Token " . $this->token,
@@ -77,5 +66,11 @@ class CampayController extends Controller
 		return response()->json([
 			'status' => $response['status']
 		]);
+	}
+
+	public function callback(CampayCallbackRequest $request)
+	{
+		// TODO: create callback request
+		// TODO: handle callback data and update transaction with ref code
 	}
 }
