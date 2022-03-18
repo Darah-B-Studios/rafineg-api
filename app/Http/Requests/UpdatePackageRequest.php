@@ -24,12 +24,12 @@ class UpdatePackageRequest extends FormRequest
 	public function rules()
 	{
 		return [
-			"name" => "required|string",
-			"description" => "required|string",
-			"amount" => "decimal|string",
-			"low_investment_limit" => "number|string",
-			"high_investment_limit" => "number|string",
+			"name" => "string|required",
+			"image" => "string",
+			"description" => "string|required",
+			"fee" => "numeric|required",
+			"low_investment_limit" => "numeric",
+			"high_investment_limit" => "numeric",
 		];
 	}
 }
-
