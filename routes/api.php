@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CampayController;
 use App\Http\Controllers\ContractsController;
 use App\Http\Controllers\NjangiGroupController;
 use App\Http\Controllers\UsersController;
@@ -13,6 +14,9 @@ use App\Http\Controllers\RegistrationFeesController;
 use App\Http\Controllers\SavingsController;
 use App\Http\Controllers\SubscriptionsController;
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\Request;
+
+use function PHPSTORM_META\map;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +66,9 @@ Route::post('test', function () {
 	}
 });
 
+Route::get('campay', [CampayController::class, 'collect']);
+Route::get('campay/{reference}', [CampayController::class, 'checkTransactionStatus']);
+
 Route::middleware('auth:sanctum')->group(function () {
 	Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 	Route::apiResource('users', UsersController::class);
@@ -86,4 +93,3 @@ Route::fallback(function () {
 		"message" => 'Page Not Found. If error persists, contact info@website.com'
 	], 404);
 });
-
