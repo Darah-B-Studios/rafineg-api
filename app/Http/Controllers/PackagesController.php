@@ -6,7 +6,6 @@ use App\Models\Package;
 use App\Http\Requests\CreatePackageRequest;
 use App\Http\Requests\UpdatePackageRequest;
 use App\Http\Resources\PackageResource;
-use Illuminate\Support\Str;
 
 class PackagesController extends Controller
 {
