@@ -64,9 +64,6 @@ Route::post('test', function () {
 	}
 });
 
-Route::get('campay', [CampayController::class, 'collect']);
-Route::get('campay/{reference}', [CampayController::class, 'checkTransactionStatus']);
-Route::get('campay/callback', [CampayController::class, 'callback']);
 
 Route::middleware('auth:sanctum')->group(function () {
 	Route::post('logout', [AuthController::class, 'logout'])->name('logout');
@@ -79,11 +76,16 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::apiResource('savings', SavingsController::class);
 	Route::apiResource('njangi-groups', NjangiGroupController::class)->except(['create', 'show', 'edit']);
 	Route::apiResource('cash-transfers', NjangiGroupController::class)->except(['create', 'edit']);
+
 	Route::post('subscribe/{package_id}', [SubscriptionsController::class, 'subscribe']);
 	Route::post('unsubscribe/{package_id}', [SubscriptionsController::class, 'unsubscribe']);
 	Route::get('subscribers/{package_id}', [SubscriptionsController::class, 'subscribers']);
 	Route::get('subscriptions', [SubscriptionsController::class, 'index']);
-	// Route::get('subscribers', [SubscriptionsController::class, 'index']);
+
+	// Campay endpoints
+	Route::post('campay', [CampayController::class, 'collect']);
+	Route::get('campay/{reference}', [CampayController::class, 'checkTransactionStatus']);
+	Route::get('campay/callback', [CampayController::class, 'callback'])->name('callback');
 });
 
 Route::fallback(function () {

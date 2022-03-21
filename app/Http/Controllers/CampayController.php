@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CollectionRequest;
 use App\Http\Requests\CampayCallbackRequest;
+use App\Models\CampayTransation;
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\Request;
 
 class CampayController extends Controller
 {
@@ -35,7 +37,7 @@ class CampayController extends Controller
 		$data = $request->validated();
 		$requestData = [
 			"amount" => $data['amount'],
-			"from" => $data['phoneNumber'],
+			"from" => $country_code . $data['phoneNumber'],
 			"description" => $data['description'],
 			"external_reference" => $data['externalReference']
 		];
@@ -43,7 +45,7 @@ class CampayController extends Controller
 			"Authorization" => "Token " . $this->token,
 		];
 
-		$response = Http::acceptJson()->withHeaders($headers)->post($url, $data);
+		$response = Http::acceptJson()->withHeaders($headers)->post($url, $requestData);
 		if (!$response->ok()) {
 			return response()->json([
 				'success' => false,
@@ -51,8 +53,9 @@ class CampayController extends Controller
 				'response' => $response->body()
 			]);
 		}
-		$ref = $response['reference'];
-		$this->checkTransactionStatus($ref);
+
+		// listen for callback event
+		return $this->callback();
 	}
 
 	public function checkTransactionStatus(string $reference)
@@ -68,9 +71,44 @@ class CampayController extends Controller
 		]);
 	}
 
-	public function callback(CampayCallbackRequest $request)
+	/* public function callback(CampayCallbackRequest $request) */
+	public function callback()
 	{
-		// TODO: create callback request
 		// TODO: handle callback data and update transaction with ref code
+		/* $data = $request->validated(); */
+		$url = $this->base_url . 'callback';
+		$headers = [
+			"Authorization" => "Token " . $this->token,
+		];
+		$response = Http::acceptJson()->withheaders($headers)->get($url);
+
+		if ($response['status'] == 'FAILED') {
+			return response()->json([
+				'success' => false,
+				'message' => 'The transaction failed',
+				'data' => null
+			]);
+		}
+
+		/* CampayTransation::create($data); */
+
+		// create transaction that is linked to
+		// the above campay transaction
+
+		$transaction = [
+			'code' => $response['code'],
+			'amount' => $response['amount'],
+			'status' => $response['status'],
+			'currency' => $response['currency'],
+			'operator' => $response['operator'],
+			'operator_reference' => $response['operator_reference'],
+			'signature' => $response['signature']
+		];
+
+		return response()->json([
+			'success' => true,
+			'message' => 'The transaction succeeded',
+			'data' => $transaction
+		]);
 	}
 }
