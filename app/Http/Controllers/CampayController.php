@@ -34,6 +34,8 @@ class CampayController extends Controller
 	public function collect(CollectionRequest $request, $country_code = '237')
 	{
 		$url = $this->base_url . 'collect/';
+		$this->token = $this->getAccessToken();
+
 		$data = $request->validated();
 		$requestData = [
 			"amount" => $data['amount'],
