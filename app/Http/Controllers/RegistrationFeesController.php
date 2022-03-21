@@ -86,7 +86,7 @@ class RegistrationFeesController extends Controller
      */
     public function show(RegistrationFee $registrationFee)
     {
-        if ($registrationFee->exits()) {
+        if ($registrationFee->exists()) {
             return response()->json([
                 "success" => true,
                 "data" => new RegistrationFeeResource($registrationFee),
@@ -109,7 +109,7 @@ class RegistrationFeesController extends Controller
     public function destroy($id)
     {
         $registrationFee = RegistrationFee::find($id);
-        if ($registrationFee->exits()) {
+        if ($registrationFee->exists()) {
             if ($registrationFee->delete()) {
                 return response()->json([
                     "success" => true,
