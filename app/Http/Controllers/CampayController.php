@@ -78,7 +78,7 @@ class CampayController extends Controller
 	{
 		// TODO: handle callback data and update transaction with ref code
 		/* $data = $request->validated(); */
-		$url = $this->base_url . 'callback';
+		$url = 'https://rafineg.herokuapp.com/api/campay';
 		$headers = [
 			"Authorization" => "Token " . $this->token,
 		];
