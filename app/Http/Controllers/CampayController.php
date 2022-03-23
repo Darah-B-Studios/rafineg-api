@@ -90,7 +90,7 @@ class CampayController extends Controller
 		/* $response = Http::acceptJson()->withheaders($headers)->get($url)->json(); */
 
 		return response()->json([
-			'success' => request()->input('status'),
+			'success' => 'checking the status of the application',
 			'message' => 'callback testing',
 			'data' => $request
 		]);
