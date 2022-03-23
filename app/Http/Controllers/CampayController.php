@@ -56,8 +56,13 @@ class CampayController extends Controller
 			]);
 		}
 
+		return response()->json([
+			'success' => false,
+			'message' => 'Transaction failed',
+			'response' => $response->body()
+		]);
 		// listen for callback event
-		return $this->callback();
+		/* return $this->callback(); */
 	}
 
 	public function checkTransactionStatus(string $reference)
@@ -74,50 +79,56 @@ class CampayController extends Controller
 	}
 
 	/* public function callback(CampayCallbackRequest $request) */
-	public function callback()
+	public function callback(Request $request)
 	{
 		// TODO: handle callback data and update transaction with ref code
 		/* $data = $request->validated(); */
-		$url = 'https://rafineg.herokuapp.com/api/callback';
-		$headers = [
-			"Authorization" => "Token " . $this->token,
-		];
-		$response = Http::acceptJson()->withheaders($headers)->get($url);
+		/* $url = 'https://rafineg.herokuapp.com/api/callback'; */
+		/* $headers = [ */
+		/*	"Authorization" => "Token " . $this->token, */
+		/* ]; */
+		/* $response = Http::acceptJson()->withheaders($headers)->get($url)->json(); */
 
 		return response()->json([
-			'success' => true,
-			'message' => 'testing',
-			'url' => $url,
-			'token' => $this->token,
-			'data' => $response->body()
+			'success' => request()->input('status'),
+			'message' => 'callback testing',
+			'data' => $request
 		]);
-		if ($response['status'] == 'FAILED') {
-			return response()->json([
-				'success' => false,
-				'message' => 'The transaction failed',
-				'data' => null
-			]);
-		}
+		/* return response()->json([ */
+		/*	'success' => true, */
+		/*	'message' => 'testing', */
+		/*	'url' => $url, */
+		/*	'token' => $this->token, */
+		/*	'data' => $response->body() */
+		/* ]); */
+
+		/* if ($response['status'] == 'FAILED') { */
+		/*	return response()->json([ */
+		/*		'success' => false, */
+		/*		'message' => 'The transaction failed', */
+		/*		'data' => null */
+		/*	]); */
+		/* } */
 
 		/* CampayTransation::create($data); */
 
 		// create transaction that is linked to
 		// the above campay transaction
 
-		$transaction = [
-			'code' => $response['code'],
-			'amount' => $response['amount'],
-			'status' => $response['status'],
-			'currency' => $response['currency'],
-			'operator' => $response['operator'],
-			'operator_reference' => $response['operator_reference'],
-			'signature' => $response['signature']
-		];
+		/* $transaction = [ */
+		/*	'code' => $response['code'], */
+		/*	'amount' => $response['amount'], */
+		/*	'status' => $response['status'], */
+		/*	'currency' => $response['currency'], */
+		/*	'operator' => $response['operator'], */
+		/*	'operator_reference' => $response['operator_reference'], */
+		/*	'signature' => $response['signature'] */
+		/* ]; */
 
-		return response()->json([
-			'success' => true,
-			'message' => 'The transaction succeeded',
-			'data' => $transaction
-		]);
+		/* return response()->json([ */
+		/*	'success' => true, */
+		/*	'message' => 'The transaction succeeded', */
+		/*	'data' => $transaction */
+		/* ]); */
 	}
 }
