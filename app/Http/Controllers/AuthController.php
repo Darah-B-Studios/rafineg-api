@@ -98,14 +98,6 @@ class AuthController extends Controller
 			"email" => "required|email"
 		]);
 
-		$user = User::where('email', $request->email)->get();
-		if (!$user) {
-			return response()->json([
-				"success" => false,
-				"message" => "No user with such email exists. Try creating an account"
-			]);
-		}
-
 		// check if there exist a record for reset password and delete it
 		$prevForgotPasswordRecord = ForgotPassword::where('email', $request->email)->get();
 		if (count($prevForgotPasswordRecord) == 1) {
