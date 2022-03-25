@@ -42,7 +42,6 @@ Route::post('test', function () {
 	$headers = [
 		'X-MeSomb-Application'      => config('mesomb.key'),
 		'X-MeSomb-RequestId'        => $request_id,
-		// 'X-MeSomb-OperationMode'    => 'asynchronous'
 	];
 
 	$data = [
@@ -56,7 +55,6 @@ Route::post('test', function () {
 		return json_encode($response);
 	} catch (\Throwable $th) {
 		// refund the amount to payer
-
 		return json_encode([
 			"success" => false,
 			"message" => $th->getMessage()
@@ -64,6 +62,10 @@ Route::post('test', function () {
 	}
 });
 
+// Campay endpoints
+Route::post('campay', [CampayController::class, 'collect']);
+Route::get('campay/{reference}', [CampayController::class, 'checkTransactionStatus']);
+Route::get('campay/callback', [CampayController::class, 'callback'])->name('callback');
 
 Route::middleware('auth:sanctum')->group(function () {
 	Route::post('logout', [AuthController::class, 'logout'])->name('logout');
@@ -83,9 +85,9 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::get('subscriptions', [SubscriptionsController::class, 'index']);
 
 	// Campay endpoints
-	Route::post('campay', [CampayController::class, 'collect']);
-	Route::get('campay/{reference}', [CampayController::class, 'checkTransactionStatus']);
-	Route::get('campay/callback', [CampayController::class, 'callback'])->name('callback');
+	/* Route::post('campay', [CampayController::class, 'collect']); */
+	/* Route::get('campay/{reference}', [CampayController::class, 'checkTransactionStatus']); */
+	/* Route::get('campay/callback', [CampayController::class, 'callback'])->name('callback'); */
 });
 
 Route::fallback(function () {

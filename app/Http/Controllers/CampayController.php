@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CollectionRequest;
-use App\Http\Requests\CampayCallbackRequest;
-use App\Models\CampayTransation;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -59,10 +57,10 @@ class CampayController extends Controller
 		return response()->json([
 			'success' => false,
 			'message' => 'Transaction failed',
-			'response' => $response->body()
+			'reference' => $response['reference']
 		]);
-		// listen for callback event
-		/* return $this->callback(); */
+
+		/* return $this->checkTransactionStatus($reference); */
 	}
 
 	public function checkTransactionStatus(string $reference)
@@ -73,8 +71,18 @@ class CampayController extends Controller
 			"Authorization" => "Token " . $this->token,
 		];
 		$response = Http::acceptJson()->withHeaders($headers)->get($url);
+		$transaction = [
+			'reference' => $response['reference'],
+			'amount' => $response['amount'],
+			'status' => $response['status'],
+			'currency' => $response['currency'],
+			'code' => $response['code'],
+			'operator_reference' => $response['operator_reference'],
+			'description' => $response['description'],
+			'reason' => $response['reason']
+		];
 		return response()->json([
-			'status' => $response['status']
+			'transaction' => $transaction,
 		]);
 	}
 
