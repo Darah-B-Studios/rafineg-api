@@ -108,9 +108,8 @@ class AuthController extends Controller
 
 		// check if there exist a record for reset password and delete it
 		$prevForgotPasswordRecord = ForgotPassword::where('email', $request->email)->get();
-
 		if (count($prevForgotPasswordRecord) == 1) {
-			$prevForgotPasswordRecord->delete();
+			ForgotPassword::where('email', $request->email)->delete();
 		}
 
 		$data['verification_code'] = $this->generateUserCode();
@@ -245,3 +244,4 @@ class AuthController extends Controller
 		return substr(str_shuffle($str_result), 0, $length);
 	}
 }
+
