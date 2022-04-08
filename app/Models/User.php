@@ -81,4 +81,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(NjangiGroup::class);
     }
+
+    public function campayTransactions()
+    {
+        return $this->hasMany(CampayTransaction::class);
+    }
 }

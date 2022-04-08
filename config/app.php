@@ -238,14 +238,13 @@ return [
 	/**
 	 * Transaction types
 	 */
-	'transaction_type' => [
-		'registration' => '01',
-		'p2p' => '02',
-		'package' => '03',
-		'group' => '04',
-		'withdrawal' => '05',
-		'other' => '06'
+	'collectionType' => [
+		'registration' => 'registration',
+		'p2p' => 'peer-to-peer',
+		'package' => 'package savings',
+		'njangi' => 'njangi savings',
+		'withdrawal' => 'withdrawal',
+		'other' => 'other'
 	]
 
 ];
-

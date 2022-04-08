@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('email', 50);
             $table->string('phone_number', 15);
             $table->string('password');
+            $table->string('referedBy', 8)->nullable();
             $table->string('firstname', 20)->nullable();
             $table->string('lastname', 20)->nullable();
             $table->boolean('is_registered')->default(false);

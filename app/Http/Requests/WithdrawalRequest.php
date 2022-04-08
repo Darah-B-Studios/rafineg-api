@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CollectionRequest extends FormRequest
+class WithdrawalRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,9 +28,8 @@ class CollectionRequest extends FormRequest
             "phoneNumber" => 'required',
             "description" => 'required|string',
             "externalReference" => 'string',
-            "collectionType" => 'string|required',
-            "collectionTypeCode" => 'string|nullable',
-            "referalCode" => 'string|nullable'
+            "collectionType" => 'string',
+            "collectionTypeCode" => 'string',
         ];
     }
 }
