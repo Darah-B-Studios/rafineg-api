@@ -7,7 +7,6 @@ use App\Http\Requests\WithdrawalRequest;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 use App\Models\User;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -54,11 +53,8 @@ class CampayController extends Controller
             "Authorization" => "Token " . $this->token,
         ];
 
-        // return json_encode(Auth::user());
-
-
         $response = Http::acceptJson()->withHeaders($headers)->post($url, $requestData);
-        if (!$response->ok()) {
+        if (!$response || !$response->ok()) {
             return response()->json([
                 'success'   => false,
                 'message'   => 'Collection request failed',
@@ -97,7 +93,7 @@ class CampayController extends Controller
 
         $response = Http::acceptJson()->withHeaders($headers)->get($url);
 
-        if (!$response->ok()) {
+        if (!$response || !$response->ok()) {
             return response()->json([
                 'success'   => false,
                 'message'   => 'Verifcation failed',
@@ -134,25 +130,54 @@ class CampayController extends Controller
         }
 
         if (Str::lower($response['status']) == 'successful') {
+            $message = '';
             switch ($transaction->collectionType) {
                 case config('app.collectionType.registration'):
                     // save user registration
                     Auth::user()->is_registered = true;
                     Auth::user()->save();
+
+                    // create users cashbox
+                    Auth::user()->cashbox()->create([
+                        'transaction_id' => $transaction->id,
+                        'balance' => 0
+                    ]);
+                    $message = 'Registration successfull. Welcome to Rafineg';
                     break;
                 case config('app.collectionType.p2p'):
                     $sender = Auth::user();
                     $receiver = User::where('phoneNumber', $transaction['phoneNumber'])->first();
-                    $sender->cashbox->balance -= $data['amount'];
-                    $receiver->cashbox->balance += $data['amount'];
 
-                    $sender->cashbox->save();
-                    $receiver->cashbox->save();
+                    if (!$receiver) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'No user with such phone number exists in out system',
+                            'data' => null
+                        ]);
+                    }
+
+                    $sender->cashbox->balance -= $transaction['amount'];
+                    $receiver->cashbox->balance += $transaction['amount'];
+
+                    $sender->cashbox()->save();
+                    $receiver->cashbox()->save();
+
+                    $message = "Successfull transfer of {$transaction['amount']} to {$transaction['phoneNumber']}";
                     break;
                 case config('app.collectionType.package'):
                 case config('app.collectionType.njangi'):
                 case config('app.collectionType.withdrawal'):
-                    Auth::user()->cashbox()->balance += $data['amount'];
+                    if (Auth::user()->cashbox->transaction_id != $transaction->id) {
+                        $newBalance = Auth::user()->cashbox->balance + $transaction->amount;
+                        Auth::user()->cashbox()->update([
+                            'balance' => $newBalance,
+                            'transaction_id' => $transaction->id
+                        ]);
+
+                        $message = "Savings have been registered successfully";
+                    } else {
+                        $message = "Cashbox not updated";
+                    }
                     break;
                 case config('app.collectionType.other'):
                     break;
@@ -170,7 +195,7 @@ class CampayController extends Controller
         $transaction->update();
         return response()->json([
             'success'   => true,
-            'message'   => 'Transaction successfull',
+            'message'   => $message,
             'data'      => new TransactionResource($transaction)
         ]);
     }
@@ -206,12 +231,14 @@ class CampayController extends Controller
             "external_reference" => $data['externalReference']
         ];
 
+        // return response()->json($requestData);
+
         $headers = [
             "Authorization" => "Token " . $this->token,
         ];
 
         $response = Http::acceptJson()->withHeaders($headers)->post($url, $requestData);
-        if (!$response->ok()) {
+        if (!$response || !$response->ok()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Transaction failed',
@@ -222,7 +249,7 @@ class CampayController extends Controller
         // create a transaction
         $transaction_data = [
             "amount"                => $data['amount'],
-            "phoneNumber"           => $data['phoneNumber'],
+            "phoneNumber"           => $country_code . $data['phoneNumber'],
             "description"           => $data['description'],
             "externalReference"     => $data['externalReference'],
             'reference'             => $response['reference'],

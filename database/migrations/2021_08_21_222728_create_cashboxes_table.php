@@ -17,7 +17,7 @@ class CreateCashboxesTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('transaction_id')->constrained()->cascadeOnDelete();
-            $table->integer('balance');
+            $table->integer('balance')->default(0);
             $table->timestamps();
         });
     }

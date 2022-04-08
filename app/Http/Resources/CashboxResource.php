@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class CashboxResource extends JsonResource
 {
@@ -18,11 +20,8 @@ class CashboxResource extends JsonResource
         return [
             "id" => $this->id,
             "balance" => $this->balance,
-            "user" => new UserResource($this->casbox_user()),
             "lastTransaction" => new TransactionResource(
-                $this->casbox_user()
-                    ->transactions()
-                    ->first()
+                Auth::user()->transactions()->orderBy('id', 'desc')->first()
             )
         ];
     }

@@ -9,5 +9,11 @@ class Cashbox extends Model
 {
     use HasFactory;
 
-    protected $guard = [];
+    protected $guarded = [];
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
