@@ -58,7 +58,7 @@ class CampayController extends Controller
             return response()->json([
                 'success'   => false,
                 'message'   => 'Collection request failed',
-                'response'  => $response->body()
+                'data'  => $response->body()
             ]);
         }
 
@@ -79,7 +79,9 @@ class CampayController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Dial ' . $response['ussd_code'] . ' to confirm your request',
-            'reference' => $response['reference']
+            'data' => [
+                'reference' => $response['reference']
+            ]
         ]);
     }
 
@@ -242,7 +244,7 @@ class CampayController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Transaction failed',
-                'response' => $response->body()
+                'data' => $response->body()
             ]);
         }
 
@@ -262,7 +264,9 @@ class CampayController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Please wait for confirmation feedback',
-            'reference' => $response['reference']
+            'data' => [
+                'reference' => $response['reference']
+            ]
         ]);
     }
 }
