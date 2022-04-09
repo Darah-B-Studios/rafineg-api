@@ -131,8 +131,8 @@ class CampayController extends Controller
             ]);
         }
 
+        $message = '';
         if (Str::lower($response['status']) == 'successful') {
-            $message = '';
             switch ($transaction->collectionType) {
                 case config('app.collectionType.registration'):
                     // save user registration
