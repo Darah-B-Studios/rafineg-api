@@ -27,7 +27,7 @@ class CollectionRequest extends FormRequest
             "amount" => 'required',
             "phoneNumber" => 'required',
             "description" => 'required|string',
-            "externalReference" => 'string',
+            "externalReference" => 'string|nullable',
             "collectionType" => 'string|required',
             "collectionTypeCode" => 'string|nullable',
             "referalCode" => 'string|nullable'

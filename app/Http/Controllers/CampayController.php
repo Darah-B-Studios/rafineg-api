@@ -218,7 +218,7 @@ class CampayController extends Controller
         ]);
     }
 
-    public function withdraw(WithdrawalRequest $request, $country_code = '237')
+    public function withdraw(CollectionRequest $request, $country_code = '237')
     {
         $url = $this->base_url . 'withdraw/';
         $this->token = $this->getAccessToken();

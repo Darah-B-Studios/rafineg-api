@@ -27,7 +27,7 @@ class WithdrawalRequest extends FormRequest
             "amount" => 'required',
             "phoneNumber" => 'required',
             "description" => 'required|string',
-            "externalReference" => 'string',
+            "externalReference" => 'string|nullable',
             "collectionType" => 'string',
             "collectionTypeCode" => 'string',
         ];
