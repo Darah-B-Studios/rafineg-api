@@ -84,9 +84,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('subscriptions', [SubscriptionsController::class, 'index']);
 
     // Campay endpoints
-    Route::post('withdraw', [CampayController::class, 'withdraw'])->name('withdraw');
-    Route::post('campay/', [CampayController::class, 'collect'])->name('collect');
-    Route::get('campay/{reference}', [CampayController::class, 'checkTransactionStatus'])->name('transaction.status');
+    Route::post('campay/withdraw', [CampayController::class, 'withdraw'])->name('withdraw');
+    Route::post('campay/collect', [CampayController::class, 'collect'])->name('collect');
+    Route::get('campay/status/{reference}', [CampayController::class, 'checkTransactionStatus'])->name('transaction.status');
     Route::get('campay/callback', [CampayController::class, 'callback'])->name('callback');
 });
 
