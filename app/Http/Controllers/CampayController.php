@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CollectionRequest;
 use App\Http\Requests\WithdrawalRequest;
+use App\Http\Resources\AppBalanceResource;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 use App\Models\User;
@@ -267,6 +268,46 @@ class CampayController extends Controller
             'data' => [
                 'reference' => $response['reference']
             ]
+        ]);
+    }
+
+    public function balance()
+    {
+        $url = $this->base_url . 'balance/';
+        $this->token = $this->getAccessToken();
+
+        $headers = [
+            "Authorization" => "Token " . $this->token,
+        ];
+
+        $response = Http::acceptJson()->withHeaders($headers)->get($url);
+        if (!$response || !$response->ok()) {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Could not get app balance',
+                'data'  => $response->body()
+            ]);
+        }
+
+        $data = [
+            'total_balance'  => $response['total_balance'],
+            'mtn_balance'    => $response['mtn_balance'],
+            'orange_balance' => $response['orange_balance']
+        ];
+
+        return response()->json([
+            'success'   => false,
+            'message'   => 'Could not get app balance',
+            'data'  => new AppBalanceResource($data)
+        ]);
+    }
+
+    public function userTransactions()
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'user transactions',
+            'data' => TransactionResource::collection(Auth::user()->transactions)
         ]);
     }
 }
