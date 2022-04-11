@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CollectionRequest;
-use App\Http\Requests\WithdrawalRequest;
 use App\Http\Resources\AppBalanceResource;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
@@ -63,7 +62,6 @@ class CampayController extends Controller
             ]);
         }
 
-
         // create a transaction
         $transaction_data = [
             "amount"                => $data['amount'],
@@ -73,8 +71,8 @@ class CampayController extends Controller
             'reference'             => $response['reference'],
             'collectionType'        => $data['collectionType'],
             'collectionTypeCode'    => $data['collectionTypeCode'],
-            // 'referalCode'           => $data['referalCode']
         ];
+
         Auth::user()->transactions()->create($transaction_data);
 
         return response()->json([
@@ -149,7 +147,7 @@ class CampayController extends Controller
                     break;
                 case config('app.collectionType.p2p'):
                     $sender = Auth::user();
-                    $receiver = User::where('phoneNumber', $transaction['phoneNumber'])->first();
+                    $receiver = User::where('phone_number', $transaction['phoneNumber'])->first();
 
                     if (!$receiver) {
                         return response()->json([
@@ -187,15 +185,13 @@ class CampayController extends Controller
             }
         }
 
-        // update transaction status to the current status
-
-
         $transaction->status = $response['status'];
         $transaction->code = $response['code'];
         $transaction->currency = $response['currency'];
         $transaction->operator = $response['operator'];
         $transaction->operatorReference = $response['operator_reference'];
         $transaction->update();
+
         return response()->json([
             'success'   => true,
             'message'   => $message,
