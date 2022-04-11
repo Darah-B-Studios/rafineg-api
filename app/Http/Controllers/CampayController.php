@@ -49,6 +49,16 @@ class CampayController extends Controller
             "external_reference"    => $data['externalReference']
         ];
 
+        // if transaction is p2p, check if receiver is part of the system
+        $receiver = User::where('phone_number', $data['phoneNumber'])->first();
+        if (!$receiver) {
+            return response()->json([
+                "success" => false,
+                "message" => "Receiver with this number does not exist in our system",
+                "data" => null
+            ]);
+        }
+
         $headers = [
             "Authorization" => "Token " . $this->token,
         ];
