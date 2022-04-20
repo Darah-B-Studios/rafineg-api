@@ -20,6 +20,7 @@ class NjangiGroupResource extends JsonResource
             "description" => $this->description,
             "minimumSavings" => $this->minimum_savings,
             "maximumSavings" => $this->maximum_savings,
+            // "createdAt" => $this->created_at
         ];
     }
 }

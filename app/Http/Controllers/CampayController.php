@@ -128,7 +128,6 @@ class CampayController extends Controller
             'operatorReference'     => $response['operator_reference'],
             'status'                => $response['status'],
         ];
-        // save transaction
 
         if (Str::lower($response['status']) == 'failed') {
             $transaction->update();

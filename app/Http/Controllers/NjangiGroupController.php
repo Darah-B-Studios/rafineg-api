@@ -88,6 +88,7 @@ class NjangiGroupController extends Controller
      */
     public function update(NjangiGroupRequest $request, NjangiGroup $njangiGroup)
     {
+
         $data = $request->validated();
         $njangiGroup->update($data);
         return response()->json([
