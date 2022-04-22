@@ -246,6 +246,7 @@ class CampayController extends Controller
         ];
 
         $response = Http::acceptJson()->withHeaders($headers)->post($url, $requestData);
+
         if (!$response || !$response->ok()) {
             return response()->json([
                 'success' => false,
