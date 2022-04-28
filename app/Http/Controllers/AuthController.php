@@ -136,7 +136,7 @@ class AuthController extends Controller
         $forgotPassword = ForgotPassword::where("verification_code", $code)->first();
         $user = User::where('email', $forgotPassword->email)->first();
 
-        return response()->json($forgotPassword->email);
+        // return response()->json($forgotPassword->email);
 
         if ($forgotPassword->is_used == false) {
             $forgotPassword->is_used = true;
