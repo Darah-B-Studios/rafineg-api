@@ -141,8 +141,6 @@ class AuthController extends Controller
         if ($forgotPassword->is_used == false) {
             $forgotPassword->is_used = true;
             $forgotPassword->update();
-            $response['success'] = true;
-            $response['message'] = "Code verified successfully";
 
             // reset current user password
             $newPassword = Hash::make($this->generateUserCode(8));
@@ -152,6 +150,8 @@ class AuthController extends Controller
             Mail::to($user->email)
                 ->send(new NewPasswordEmail($newPassword, $user->lastname));
 
+            $response['success'] = true;
+            $response['message'] = "Code verified successfully. Check your email for a new password";
             return response()->json($response);
         } elseif ($forgotPassword->expires_on < Carbon::now()) {
             $response['message'] = "Reset code has expired";
