@@ -137,6 +137,7 @@ class AuthController extends Controller
         if ($forgotPassword->is_used == false) {
             $forgotPassword->is_used = true;
             $forgotPassword->update();
+            $response['success'] = true;
             $response['message'] = "Code verified successfully";
             return response()->json($response);
         } elseif ($forgotPassword->expires_on < Carbon::now()) {
