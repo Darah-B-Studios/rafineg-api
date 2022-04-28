@@ -6,6 +6,7 @@ use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Mail\ForgotPasswordEmail;
+use App\Mail\NewPasswordEmail;
 use App\Models\ForgotPassword;
 use App\Models\User;
 use App\Models\Referal;
@@ -133,12 +134,24 @@ class AuthController extends Controller
         // $code = $request->only['code'];
         // return json_encode($code);
         $forgotPassword = ForgotPassword::where("verification_code", $code)->first();
+        $user = User::where('email', $forgotPassword->email)->first();
+
+        return response()->json($forgotPassword->email);
 
         if ($forgotPassword->is_used == false) {
             $forgotPassword->is_used = true;
             $forgotPassword->update();
             $response['success'] = true;
             $response['message'] = "Code verified successfully";
+
+            // reset current user password
+            $newPassword = Hash::make($this->generateUserCode(8));
+            $user->update(["password" => $newPassword]);
+
+            // send new password email
+            Mail::to($user->email)
+                ->send(new NewPasswordEmail($newPassword, $user->lastname));
+
             return response()->json($response);
         } elseif ($forgotPassword->expires_on < Carbon::now()) {
             $response['message'] = "Reset code has expired";
