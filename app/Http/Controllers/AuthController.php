@@ -143,8 +143,8 @@ class AuthController extends Controller
             $forgotPassword->update();
 
             // reset current user password
-            $newPassword = Hash::make($this->generateUserCode(8));
-            $user->update(["password" => $newPassword]);
+            $newPassword = $this->generateUserCode(8);
+            $user->update(["password" => Hash::make($newPassword)]);
 
             // send new password email
             Mail::to($user->email)

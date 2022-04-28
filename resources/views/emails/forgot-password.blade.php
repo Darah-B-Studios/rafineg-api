@@ -1,9 +1,9 @@
 @component('mail::message')
     # Rafineg Password Reset
 
-    Hello user,
+    Hello dear user,
     You requested a password reset from your mobile client.
-    Here is the reset code: **{{ $verification_code }}**
+    Here is the reset code: *{{ $verification_code }}*
 
     If you did not request this, feel free to ignore this message.
 
