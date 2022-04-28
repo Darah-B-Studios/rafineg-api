@@ -123,20 +123,22 @@ class AuthController extends Controller
      * app to send reset code
      * @return apiResponse to client
      */
-    public function confirm_password_reset_code(Request $request)
+    public function confirm_password_reset_code(string $code)
     {
         $response = [
             "success" => false,
             "message" => null,
             "data" => null,
         ];
-        $code = $request->only['code'];
+        // $code = $request->only['code'];
+        // return json_encode($code);
         $forgotPassword = ForgotPassword::where("verification_code", $code)->first();
 
         if ($forgotPassword->is_used == false) {
             $forgotPassword->is_used = true;
             $forgotPassword->update();
             $response['message'] = "Code verified successfully";
+            return response()->json($response);
         } elseif ($forgotPassword->expires_on < Carbon::now()) {
             $response['message'] = "Reset code has expired";
             return response()->json($response);

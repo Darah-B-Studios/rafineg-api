@@ -32,35 +32,7 @@ Route::post('signin', [AuthController::class, 'signin']);
 Route::post('reset-password', [AuthController::class, 'reset_password']);
 Route::post('verify/${method}', [AuthController::class, 'verify_client']);
 Route::post('forgot-password', [AuthController::class, 'forgot_password']);
-Route::post('forgot-password/confirm-code', [AuthController::class, 'confirm_password_reset_code']);
-
-Route::post('test', function () {
-    $request_id = (string) Str::uuid();
-    $api_version = config('mesomb.version');
-    $api_url = "https://mesomb.hachther.com/api/{$api_version}/payment/online/";
-
-    $headers = [
-        'X-MeSomb-Application'      => config('mesomb.key'),
-        'X-MeSomb-RequestId'        => $request_id,
-    ];
-
-    $data = [
-        "service" => 'MTN',
-        "amount" => 10,
-        "payer" => "237672374414",
-    ];
-
-    try {
-        $response = Http::withHeaders($headers)->post($api_url, $data);
-        return json_encode($response);
-    } catch (\Throwable $th) {
-        // refund the amount to payer
-        return json_encode([
-            "success" => false,
-            "message" => $th->getMessage()
-        ]);
-    }
-});
+Route::post('forgot-password/{code}', [AuthController::class, 'confirm_password_reset_code']);
 
 // Campay endpoints
 
