@@ -31,8 +31,8 @@ class TransactionResource extends JsonResource
             'collectionType' => $this->collectionType,
             'collectionTypeCode' => $this->collectionTypeCode,
             'method' => $this->method,
-            'createdOn' => $this->created_on,
-            'updatedOn' => $this->updated_on
+            'createdAt' => $this->created_at,
+            'updatedAt' => $this->updated_at
         ];
     }
 }
