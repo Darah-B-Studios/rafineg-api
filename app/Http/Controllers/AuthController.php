@@ -31,15 +31,6 @@ class AuthController extends Controller
         $data['password'] =  Hash::make($data['password']);
 
         if ($new_user = User::create($data)) {
-            //  = request()->input('referedBy');
-            // if (!empty($referal_code)) {
-            //     Referal::create([
-            //         'code' => $referal_code,
-            //         'link' => '',
-            //         'user_id' => $new_user->id
-            //     ]);
-            // }
-
             // create user profile
             $profile_data = [
                 'bio' => '',

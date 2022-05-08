@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
 
-
 class CampayController extends Controller
 {
     public $base_url;
@@ -121,13 +120,13 @@ class CampayController extends Controller
             ]);
         }
 
-        $data = [
-            'code'                  => $response['code'],
-            'currency'              => $response['currency'],
-            'operator'              => $response['operator'],
-            'operatorReference'     => $response['operator_reference'],
-            'status'                => $response['status'],
-        ];
+        // $data = [
+        //     'code'                  => $response['code'],
+        //     'currency'              => $response['currency'],
+        //     'operator'              => $response['operator'],
+        //     'operatorReference'     => $response['operator_reference'],
+        //     'status'                => $response['status'],
+        // ];
 
         if (Str::lower($response['status']) == 'failed') {
             $transaction->update();

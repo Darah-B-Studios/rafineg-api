@@ -7,6 +7,7 @@ use App\Http\Requests\CreateCashboxRequest;
 use App\Http\Requests\UpdateCashboxRequest;
 use App\Http\Resources\CashboxResource;
 use App\Models\Cashbox;
+use Illuminate\Support\Facades\Auth;
 
 class CashboxesController extends Controller
 {
@@ -20,6 +21,14 @@ class CashboxesController extends Controller
         return response()->json([
             "success" => true,
             "data" => CashboxResource::collection(Cashbox::all()),
+        ]);
+    }
+
+    public function getUserCashbox()
+    {
+        return response()->json([
+            "success" => true,
+            "data" => new CashboxResource(Auth::user()->cashbox)
         ]);
     }
 
