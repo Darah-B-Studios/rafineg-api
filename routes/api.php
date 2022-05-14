@@ -11,6 +11,7 @@ use App\Http\Controllers\ReferalController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use App\Http\Controllers\RegistrationFeesController;
+use App\Http\Controllers\ReportsControler;
 use App\Http\Controllers\SavingsController;
 use App\Http\Controllers\SubscriptionsController;
 use Illuminate\Support\Facades\Http;
@@ -54,6 +55,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('unsubscribe/{package_id}', [SubscriptionsController::class, 'unsubscribe']);
     Route::get('subscribers/{package_id}', [SubscriptionsController::class, 'subscribers']);
     Route::get('subscriptions', [SubscriptionsController::class, 'index']);
+
+    // reports
+    Route::get('transactions/report', [ReportsControler::class, 'transaction_report']);
 
     // Campay endpoints
     Route::post('campay/withdraw', [CampayController::class, 'withdraw'])->name('campay.withdraw');

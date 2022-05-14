@@ -30,6 +30,8 @@ class CreateTransactionsTable extends Migration
             $table->string('status')->default('PENDING');
             $table->string('collectionType')->nullable();
             $table->string('collectionTypeCode')->nullable();
+            $table->integer('oldBalance')->default(0);
+            $table->integer('newBalance')->default(0);
             $table->string('signature')->nullable();
             $table->string('method')->default(Config::get('app.transaction_method.momo'));
             $table->timestamps();

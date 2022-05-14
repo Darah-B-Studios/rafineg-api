@@ -30,6 +30,8 @@ class TransactionResource extends JsonResource
             'status' => $this->status,
             'collectionType' => $this->collectionType,
             'collectionTypeCode' => $this->collectionTypeCode,
+            'oldBalance' => $this->oldBalance,
+            'newBalance' => $this->newBalance,
             'method' => $this->method,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at

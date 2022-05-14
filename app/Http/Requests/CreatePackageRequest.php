@@ -30,6 +30,7 @@ class CreatePackageRequest extends FormRequest
             "fee" => "numeric|required",
             "low_investment_limit" => "numeric",
             "high_investment_limit" => "numeric",
+            "theme" => "string|nullable",
 
             // TODO:
             /**
