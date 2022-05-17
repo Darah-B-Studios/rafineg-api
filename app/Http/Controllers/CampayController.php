@@ -35,6 +35,14 @@ class CampayController extends Controller
         return $response['token'];
     }
 
+
+    /**
+     * Request collection
+     *
+     * @param  mixed $request
+     * @param  string $country_code
+     * @return void
+     */
     public function collect(CollectionRequest $request, $country_code = '237')
     {
         $url = $this->base_url . 'collect/';
@@ -93,6 +101,12 @@ class CampayController extends Controller
         ]);
     }
 
+    /**
+     * Check/confirm a transaction from campay
+     *
+     * @param  string $reference
+     * @return void
+     */
     public function checkTransactionStatus(string $reference)
     {
         $url = $this->base_url . 'transaction/' . $reference;
@@ -119,14 +133,6 @@ class CampayController extends Controller
                 'data'      => null
             ]);
         }
-
-        // $data = [
-        //     'code'                  => $response['code'],
-        //     'currency'              => $response['currency'],
-        //     'operator'              => $response['operator'],
-        //     'operatorReference'     => $response['operator_reference'],
-        //     'status'                => $response['status'],
-        // ];
 
         if (Str::lower($response['status']) == 'failed') {
             $transaction->update();
@@ -175,7 +181,7 @@ class CampayController extends Controller
                     break;
                 case config('app.collectionType.package'):
                 case config('app.collectionType.njangi'):
-                case config('app.collectionType.withdrawal'):
+                    // case config('app.collectionType.withdrawal'):
                     if (Auth::user()->cashbox->transaction_id != $transaction->id) {
                         $newBalance = Auth::user()->cashbox->balance + $transaction->amount;
                         Auth::user()->cashbox()->update([
@@ -307,8 +313,16 @@ class CampayController extends Controller
         ]);
     }
 
-    public function userTransactions()
+    public function userTransactions($id = NULL)
     {
+        if ($id) {
+            $user = User::find($id);
+            return response()->json([
+                'success' => true,
+                'message' => 'user transactions',
+                'data' => TransactionResource::collection($user->transactions)
+            ]);
+        }
         return response()->json([
             'success' => true,
             'message' => 'user transactions',

@@ -55,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('unsubscribe/{package_id}', [SubscriptionsController::class, 'unsubscribe']);
     Route::get('subscribers/{package_id}', [SubscriptionsController::class, 'subscribers']);
     Route::get('subscriptions', [SubscriptionsController::class, 'index']);
+    Route::get('subscriptions/user/{user_id}', [SubscriptionsController::class, 'user_subscriptions']);
 
     // reports
     Route::get('transactions/report', [ReportsControler::class, 'transaction_report']);
@@ -63,7 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('campay/withdraw', [CampayController::class, 'withdraw'])->name('campay.withdraw');
     Route::post('campay/collect', [CampayController::class, 'collect'])->name('campay.collect');
     Route::get('campay/status/{reference}', [CampayController::class, 'checkTransactionStatus'])->name('campay.transaction.status');
-    Route::get('campay/user-transactions', [CampayController::class, 'userTransactions'])->name('campay.user.transactions');
+    Route::get('campay/user-transactions/{id?}', [CampayController::class, 'userTransactions'])->name('campay.user.transactions');
     Route::get('campay/balance', [CampayController::class, 'balance'])->name('campay.balance');
     Route::get('campay/callback', [CampayController::class, 'callback'])->name('campay.callback');
 });

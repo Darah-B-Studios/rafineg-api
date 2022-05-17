@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PackageResource;
 use App\Http\Resources\UserResource;
 use App\Models\Package;
-
+use App\Models\User;
+use Laravel\Cashier\Subscription;
 use Throwable;
 
 class SubscriptionsController extends Controller
@@ -84,6 +85,16 @@ class SubscriptionsController extends Controller
             "success" => false,
             "data" => null,
             "message" => "Package does no exist"
+        ]);
+    }
+
+    public function user_subscriptions(int $user_id)
+    {
+        $user = User::find($user_id);
+        return response()->json([
+            "success" => true,
+            "data" => PackageResource::collection($user->subscriptions),
+            "message" => ""
         ]);
     }
 }
