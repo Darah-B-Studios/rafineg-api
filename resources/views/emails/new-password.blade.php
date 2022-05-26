@@ -3,7 +3,7 @@
 
     Hello {{ $username }},
     You have successfully requested for a new password. You can find the password below.
-    *{{ $newPassword }}*
+    ### {{ $newPassword }}
 
     We encourage to go in and reset this password so that it will not be compromized.
     Thank you,

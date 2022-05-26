@@ -30,7 +30,10 @@ class ProfileRequest extends FormRequest
             "gender" => "string|nullable",
             "date_of_birth" => "date|nullable",
             "image" => "string|nullable|max:1000",
-            "user_id" => Auth::id()
+            "firstname" => "string",
+            "lastname" => "string",
+            "email" => "email|string",
         ];
     }
 }
+

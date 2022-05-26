@@ -9,7 +9,6 @@ use App\Mail\ForgotPasswordEmail;
 use App\Mail\NewPasswordEmail;
 use App\Models\ForgotPassword;
 use App\Models\User;
-use App\Models\Referal;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -224,9 +223,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // auth()->user()->tokens()->delete();
         $request->user()->tokens()->delete();
-        // auth()->user()->currentAccessToken()->delete();
         return response()->json([
             "success" => true,
             "message" => "Logout successful"

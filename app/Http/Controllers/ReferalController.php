@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ReferalRequest;
 use App\Http\Resources\ReferalResource;
+use App\Http\Resources\UserResource;
 use App\Models\Referal;
+use App\Models\User;
 
 class ReferalController extends Controller
 {
@@ -97,4 +99,20 @@ class ReferalController extends Controller
             "data" => new ReferalResource($referal)
         ], 404);
     }
+
+
+
+    public function userReferals(int $id){
+        $user = User::find($id);
+        $referals = User::where('referedBy', $user->code)->get();
+        if($user) {
+        return response()->json([
+            'success' => true,
+            'message' => 'User referals',
+            'data' => UserResource::collection($referals)
+        ]);
+    }
+}
+
+
 }

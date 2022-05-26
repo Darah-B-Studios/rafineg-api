@@ -32,6 +32,7 @@ class UserRequest extends FormRequest
             "password" => "required|string|min:6",
             "phone_number" => "integer|required|unique:users,phone_number",
             "referedBy" => "string",
+
             // others
             "bio" => "string|nullable",
             "address" => "string|nullable",

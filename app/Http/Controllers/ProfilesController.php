@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileRequest;
 use App\Http\Resources\ProfileResource;
+use App\Http\Resources\UserResource;
 use App\Models\Profile;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProfilesController extends Controller
@@ -75,7 +78,9 @@ class ProfilesController extends Controller
      */
     public function update(ProfileRequest $request, Profile $profile)
     {
+        // return response()->json(Auth::user());
         $basic_information = $request->validated();
+
 
         if (request()->hasFile('image')) {
             Storage::delete($profile->image);
@@ -93,6 +98,38 @@ class ProfilesController extends Controller
 
         return response()->json([
             "success"   => true,
+            "message" => "profile updated successfully",
+            "data" => [
+                "basicInformation" => new UserResource(Auth::user()),
+                "profileInformation" => new ProfileResource($profile)
+            ]
+        ]);
+    }
+
+    public function editProfile(ProfileRequest $request, int $id)
+    {
+        $user = User::find($id);
+        if ($user) {
+            $data = $request->validated();
+            $basicInfo = $request->except(["firstname", "lastname", "email"]);
+            $defaultInfo = $request->only(['firstname', 'lastname', 'email']);
+
+            $user->update($defaultInfo);
+            $user->profile()->update($basicInfo);
+
+            return response()->json([
+                "success"   => true,
+                "message" => "profile updated successfully",
+                "data" => [
+                    "basicInformation" => new UserResource($user),
+                    "profileInformation" => $basicInfo
+                ]
+            ]);
+        }
+
+        return response()->json([
+            "success" => false,
+            "message" => "User not authorized"
         ]);
     }
 
@@ -112,3 +149,4 @@ class ProfilesController extends Controller
         ], 201);
     }
 }
+

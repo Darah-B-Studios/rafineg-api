@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -14,6 +15,8 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+        $parentReferal = User::where('code', '=', $this->referedBy)->first();
+
         return [
             "id" => $this->id,
             "firstName" => $this->firstname,
@@ -22,7 +25,9 @@ class UserResource extends JsonResource
             "phoneNumber" => $this->phone_number,
             "isRegistered" => $this->is_registered,
             "isVerified" => $this->isVerified,
-            "isAdmin" => $this->isAdmin
+            "isAdmin" => $this->isAdmin,
+            "code" => $this->code,
+            "referedBy" => $parentReferal ? $parentReferal->id : null
         ];
     }
 }

@@ -9,12 +9,10 @@ use App\Http\Controllers\PackagesController;
 use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\ReferalController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 use App\Http\Controllers\RegistrationFeesController;
 use App\Http\Controllers\ReportsControler;
 use App\Http\Controllers\SavingsController;
 use App\Http\Controllers\SubscriptionsController;
-use Illuminate\Support\Facades\Http;
 
 
 /*
@@ -44,8 +42,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UsersController::class);
     Route::apiResource('packages', PackagesController::class);
     Route::apiResource('profiles', ProfilesController::class);
+    Route::patch('edit-profile/{id}', [ProfilesController::class, 'editProfile'])->name('user.edit-profile');
+
     Route::apiResource('contracts', ContractsController::class);
     Route::apiResource('referals', ReferalController::class);
+    Route::get('user-referals/{id}', [ReferalController::class, 'userReferals']);
+
+
     Route::apiResource('registration', RegistrationFeesController::class);
     Route::apiResource('savings', SavingsController::class);
     Route::apiResource('njangi-groups', NjangiGroupController::class)->except(['create', 'show', 'edit']);

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
 
+use function PHPUnit\Framework\isNull;
+
 class CampayController extends Controller
 {
     public $base_url;
@@ -135,7 +137,10 @@ class CampayController extends Controller
         }
 
         if (Str::lower($response['status']) == 'failed') {
+            $transaction->oldBalance = Auth::user()->cashbox()->balance;
+            $transaction->newBalance = Auth::user()->cashbox()->balance;
             $transaction->update();
+            
 
             return response()->json([
                 'success'   => false,
@@ -148,6 +153,19 @@ class CampayController extends Controller
         if (Str::lower($response['status']) == 'successful') {
             switch ($transaction->collectionType) {
                 case config('app.collectionType.registration'):
+                    // check if user is registered with referal code
+                    // check if user was refered
+                    $referalCode = Auth::user()->referedBy;
+                    if (!isNull($referalCode)) {
+                        // get the parentReferal
+                        $parentReferal = User::find('referedBy', $referalCode)->get();
+                        if ($parentReferal) {
+                            $parentUserReferalBonus = round($transaction->amount / 2);
+                            $parentReferal->cashbox()->balance += $parentUserReferalBonus;
+                            $parentReferal->save();
+                        }
+                    }
+
                     // save user registration
                     Auth::user()->is_registered = true;
                     Auth::user()->save();
@@ -195,6 +213,10 @@ class CampayController extends Controller
                     }
                     break;
                 case config('app.collectionType.other'):
+                    $currentUser = Auth::user();
+                    $currentUser->cashbox()->balance += $transaction['amount'];
+                    $currentUser->cashbox()->transaction_id = $transaction['id'];
+                    $currentUser->cashbox()->save();
                     break;
             }
         }
@@ -213,23 +235,6 @@ class CampayController extends Controller
         ]);
     }
 
-    /* public function callback(CampayCallbackRequest $request) */
-    public function callback(Request $request)
-    {
-        // TODO: handle callback data and update transaction with ref code
-        /* $data = $request->validated(); */
-        /* $url = 'https://rafineg.herokuapp.com/api/callback'; */
-        /* $headers = [ */
-        /*	"Authorization" => "Token " . $this->token, */
-        /* ]; */
-        /* $response = Http::acceptJson()->withheaders($headers)->get($url)->json(); */
-
-        return response()->json([
-            'success' => 'checking the status of the application',
-            'message' => 'callback testing',
-            'data' => $request
-        ]);
-    }
 
     public function withdraw(CollectionRequest $request, $country_code = '237')
     {
@@ -330,3 +335,4 @@ class CampayController extends Controller
         ]);
     }
 }
+
