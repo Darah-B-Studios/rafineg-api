@@ -24,6 +24,15 @@ class CreateUsersTable extends Migration
             $table->string('lastname', 20)->nullable();
             $table->boolean('is_registered')->default(false);
             $table->boolean('isAdmin')->default(false);
+
+            // Optional content goes here
+            $table->string('altEmail')->nullable();
+            $table->string('altPhoneNumber')->nullable();
+            $table->string('altAddress')->nullable();
+            $table->string('country')->nullable();
+            $table->string('town')->nullable();
+            $table->string('city')->nullable();
+
             $table->boolean('isVerified')->default(false)->comment('false: user not verified, true: user verified');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
