@@ -12,7 +12,6 @@
 	<body class="antialiased">
 		<div>
 			<h1 style="text-align: center;">RAFINEG API </h1>
-			<p>Working fine I tho</p>
 		</div>
 	</body>
 

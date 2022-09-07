@@ -19,6 +19,7 @@ class UserResource extends JsonResource
 
         return [
             "id" => $this->id,
+            "code" => $this->code,
             "firstName" => $this->firstname,
             "lastName" => $this->lastname,
             "email" => $this->email,
@@ -26,7 +27,6 @@ class UserResource extends JsonResource
             "isRegistered" => $this->is_registered,
             "isVerified" => $this->isVerified,
             "isAdmin" => $this->isAdmin,
-            "code" => $this->code,
             "referedBy" => $parentReferal ? $parentReferal->id : null
         ];
     }

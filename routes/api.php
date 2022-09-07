@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\UsersController as AdminUsersController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BootampController;
 use App\Http\Controllers\CampayController;
 use App\Http\Controllers\ContractsController;
 use App\Http\Controllers\NjangiGroupController;
@@ -33,9 +35,9 @@ Route::post('verify/${method}', [AuthController::class, 'verify_client']);
 Route::post('forgot-password', [AuthController::class, 'forgot_password']);
 Route::post('forgot-password/{code}', [AuthController::class, 'confirm_password_reset_code']);
 
+Route::post('collect/bootcamp', [BootampController::class, 'collect'])->name('bootcamp.collect');
+
 // Campay endpoints
-
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('cashbox', [UsersController::class, 'cashbox']);
@@ -71,6 +73,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('campay/balance', [CampayController::class, 'balance'])->name('campay.balance');
     Route::get('campay/callback', [CampayController::class, 'callback'])->name('campay.callback');
 });
+
+
+
 
 Route::fallback(function () {
     return response()->json([

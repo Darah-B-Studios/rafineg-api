@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminUsersController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SavingsController;
 
@@ -15,6 +16,11 @@ use App\Http\Controllers\SavingsController;
 */
 
 Route::apiResource('savings', SavingsController::class);
+
+Route::prefix('admin')->group(function() {
+    Route::resource('manage-users', AdminUsersController::class);
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
